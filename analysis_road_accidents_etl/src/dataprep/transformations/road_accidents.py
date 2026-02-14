@@ -1,4 +1,5 @@
 from pyspark import pipelines as dp
+from pyspark.sql import functions as F
 from utilities.tools import delete_technical_columns
 
 catalog = spark.conf.get("param_catalog")
@@ -21,10 +22,8 @@ def road_accidents():
     
     return (
         df_main
-            .withColumnRenamed("accident_num_char", "accident_num")
-            .withColumnRenamed("vehicle_id_ve", "vehicle_id")
-            .withColumnRenamed("vehicle_num_ve", "vehicle_num")
-            .drop("accident_num_st", "accident_num_ve", "accident_num_vic", "vehicle_id_vic", "vehicle_num_vic")
+            .withColumn("accident_latitude", F.regexp_replace(F.col("accident_latitude"), ",", ".").cast("double"))
+            .withColumn("accident_longitude", F.regexp_replace(F.col("accident_longitude"), ",", ".").cast("double"))
     )
 
 
@@ -53,7 +52,7 @@ def join_accidents_table(df_acc_char, df_acc_st, df_acc_ve, df_acc_vic):
             .withColumnRenamed("vehicle_num", "vehicle_num_vic")
     )
     
-    return (
+    df_final = (
         df_acc_char_formated
             .join(
                 df_acc_st_formated,
@@ -70,6 +69,14 @@ def join_accidents_table(df_acc_char, df_acc_st, df_acc_ve, df_acc_vic):
                 (df_acc_ve_formated["accident_num_ve"] == df_acc_vic_formated["accident_num_vic"]) & (df_acc_ve_formated["vehicle_id_ve"] == df_acc_vic_formated["vehicle_id_vic"]),
                 "left"
             )
+    )
+
+    return (
+        df_final
+            .withColumnRenamed("accident_num_char", "accident_num")
+            .withColumnRenamed("vehicle_id_ve", "vehicle_id")
+            .withColumnRenamed("vehicle_num_ve", "vehicle_num")
+            .drop("accident_num_st", "accident_num_ve", "accident_num_vic", "vehicle_id_vic", "vehicle_num_vic")
     )
 
 
