@@ -2,22 +2,22 @@
 
 resources:
   pipelines:
-    dataprep_pipeline:
-      name: dataprep_pipeline
+    analytics_pipeline:
+      name: analytics_pipeline
       catalog: ${var.catalog}
-      schema: ${var.schema_dataprep}
+      schema: ${var.schema_analytics}
       configuration:
         param_catalog: ${var.catalog}
-        param_schema_raw: ${var.schema_raw}
         param_schema_dataprep: ${var.schema_dataprep}
+        param_schema_analytics: ${var.schema_analytics}
         param_workspace_base_path: ${var.workspace_base_path}
-      root_path: "../../src/dataprep"
+      root_path: "../../src/analytics"
 
       continuous: false
 
       libraries:
         - glob:
-            include: ../../src/dataprep/**
+            include: ../../src/analytics/**
 
       # environment:
       #   dependencies:

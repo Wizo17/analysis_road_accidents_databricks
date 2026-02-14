@@ -1,28 +1,28 @@
 from pyspark import pipelines as dp
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+from pyspark.sql.types import StructType, StructField, StringType
 from pyspark.sql.functions import col, current_timestamp, to_date
 
 volume_path = spark.conf.get("volume_ingestion_path")
 
 schema = StructType([
     StructField("accident_num", StringType(), True),
-    StructField("road_category", IntegerType(), True),
+    StructField("road_category", StringType(), True),
     StructField("road_name", StringType(), True),
     StructField("road_index_number", StringType(), True),
     StructField("road_alphanumeric_index", StringType(), True),
-    StructField("road_traffic_system", IntegerType(), True),
-    StructField("total_number_of_traffic_lanes", IntegerType(), True),
-    StructField("reserved_lane", IntegerType(), True),
-    StructField("road_gradient", IntegerType(), True),
-    StructField("number_of_associated_pr", IntegerType(), True),
-    StructField("distance_to_pr_in_meters", IntegerType(), True),
-    StructField("map", IntegerType(), True),
-    StructField("width_of_central_reservation_tpc", IntegerType(), True),
-    StructField("width_of_roadway", IntegerType(), True),
-    StructField("surface_condition", IntegerType(), True),
-    StructField("layout_infrastructure", IntegerType(), True),
-    StructField("location_of_accident", IntegerType(), True),
-    StructField("maximum_speed_limit", IntegerType(), True)
+    StructField("road_traffic_system", StringType(), True),
+    StructField("total_number_of_traffic_lanes", StringType(), True),
+    StructField("reserved_lane", StringType(), True),
+    StructField("road_gradient", StringType(), True),
+    StructField("number_of_associated_pr", StringType(), True),
+    StructField("distance_to_pr_in_meters", StringType(), True),
+    StructField("map", StringType(), True),
+    StructField("width_of_central_reservation_tpc", StringType(), True),
+    StructField("width_of_roadway", StringType(), True),
+    StructField("surface_condition", StringType(), True),
+    StructField("layout_infrastructure", StringType(), True),
+    StructField("location_of_accident", StringType(), True),
+    StructField("maximum_speed_limit", StringType(), True)
 ])
 
 @dp.table(

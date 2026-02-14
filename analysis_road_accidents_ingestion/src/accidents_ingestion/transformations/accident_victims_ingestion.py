@@ -1,5 +1,5 @@
 from pyspark import pipelines as dp
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+from pyspark.sql.types import StructType, StructField, StringType
 from pyspark.sql.functions import col, current_timestamp, to_date
 
 volume_path = spark.conf.get("volume_ingestion_path")
@@ -9,11 +9,11 @@ schema = StructType([
     StructField("user_id", StringType(), True),
     StructField("vehicle_id", StringType(), True),
     StructField("vehicle_num", StringType(), True),
-    StructField("seat_position", IntegerType(), True),
+    StructField("seat_position", StringType(), True),
     StructField("user_category", StringType(), True),
     StructField("injury_severity", StringType(), True),
     StructField("user_gender", StringType(), True),
-    StructField("user_birth_year", IntegerType(), True),
+    StructField("user_birth_year", StringType(), True),
     StructField("reason_for_travel", StringType(), True),
     StructField("safety_equipment_1", StringType(), True),
     StructField("safety_equipment_2", StringType(), True),

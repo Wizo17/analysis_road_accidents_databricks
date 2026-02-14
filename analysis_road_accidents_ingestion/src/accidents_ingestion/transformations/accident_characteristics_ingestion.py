@@ -1,22 +1,22 @@
 from pyspark import pipelines as dp
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+from pyspark.sql.types import StructType, StructField, StringType
 from pyspark.sql.functions import col, current_timestamp, to_date
 
 volume_path = spark.conf.get("volume_ingestion_path")
 
 schema = StructType([
     StructField("accident_num", StringType(), True),
-    StructField("accident_day", IntegerType(), True),
-    StructField("accident_month", IntegerType(), True),
-    StructField("accident_year", IntegerType(), True),
+    StructField("accident_day", StringType(), True),
+    StructField("accident_month", StringType(), True),
+    StructField("accident_year", StringType(), True),
     StructField("accident_time", StringType(), True),
-    StructField("light_conditions", IntegerType(), True),
-    StructField("department_code", IntegerType(), True),
-    StructField("commune_code", IntegerType(), True),
-    StructField("accident_location", IntegerType(), True),
-    StructField("accident_intersection", IntegerType(), True),
-    StructField("accident_atmospheric_conditions", IntegerType(), True),
-    StructField("accident_collision_type", IntegerType(), True),
+    StructField("light_conditions", StringType(), True),
+    StructField("department_code", StringType(), True),
+    StructField("commune_code", StringType(), True),
+    StructField("accident_location", StringType(), True),
+    StructField("accident_intersection", StringType(), True),
+    StructField("accident_atmospheric_conditions", StringType(), True),
+    StructField("accident_collision_type", StringType(), True),
     StructField("accident_address", StringType(), True),
     StructField("accident_latitude", StringType(), True),
     StructField("accident_longitude", StringType(), True)

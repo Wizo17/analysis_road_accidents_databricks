@@ -1,5 +1,5 @@
 from pyspark import pipelines as dp
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+from pyspark.sql.types import StructType, StructField, StringType
 from pyspark.sql.functions import col, current_timestamp, to_date
 
 volume_path = spark.conf.get("volume_ingestion_path")
@@ -8,14 +8,14 @@ schema = StructType([
     StructField("accident_num", StringType(), True),
     StructField("vehicle_id", StringType(), True),
     StructField("vehicle_num", StringType(), True),
-    StructField("vehicle_direction", IntegerType(), True),
-    StructField("vehicle_category", IntegerType(), True),
-    StructField("fixed_obstacle_struck", IntegerType(), True),
-    StructField("moving_obstacle_struck", IntegerType(), True),
-    StructField("initial_point_of_impact", IntegerType(), True),
-    StructField("main_maneuver_prior_accident", IntegerType(), True),
-    StructField("vehicle_engine_type", IntegerType(), True),
-    StructField("number_of_occupants", IntegerType(), True)
+    StructField("vehicle_direction", StringType(), True),
+    StructField("vehicle_category", StringType(), True),
+    StructField("fixed_obstacle_struck", StringType(), True),
+    StructField("moving_obstacle_struck", StringType(), True),
+    StructField("initial_point_of_impact", StringType(), True),
+    StructField("main_maneuver_prior_accident", StringType(), True),
+    StructField("vehicle_engine_type", StringType(), True),
+    StructField("number_of_occupants", StringType(), True)
 ])
 
 @dp.table(

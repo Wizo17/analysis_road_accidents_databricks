@@ -18,6 +18,8 @@ variables:
     description: The schema to use for the silver layer
   schema_analytics:
     description: The schema to use for the gold layer
+  workspace_base_path:
+    description: The base path in the workspace where resources will be deployed for the target
   
 
 targets:
@@ -35,6 +37,7 @@ targets:
       schema_raw: roaa_dev_raw
       schema_dataprep: roaa_dev_dataprep
       schema_analytics: roaa_dev_analytics
+      workspace_base_path: /Workspace/Users/wzounonpro@gmail.com/.bundle/${bundle.name}/${bundle.target}
     presets:
       artifacts_dynamic_version: true
   prod:
@@ -48,6 +51,7 @@ targets:
       schema_raw: roaa_prod_raw
       schema_dataprep: roaa_prod_dataprep
       schema_analytics: roaa_prod_analytics
+      workspace_base_path: /Workspace/Users/wzounonpro@gmail.com/.bundle/${bundle.name}/${bundle.target}
     permissions:
       - user_name: wzounonpro@gmail.com
         level: CAN_MANAGE
