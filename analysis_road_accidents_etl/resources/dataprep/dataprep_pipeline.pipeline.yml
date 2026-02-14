@@ -1,0 +1,34 @@
+# The main pipeline for accident_characteristics ingestion.
+
+resources:
+  pipelines:
+    dataprep_pipeline:
+      name: dataprep_pipeline
+      catalog: ${var.catalog}
+      schema: ${var.schema_dataprep}
+      configuration:
+        param_catalog: ${var.catalog}
+        param_schema_raw: ${var.schema_raw}
+      root_path: "../../src/dataprep"
+
+      continuous: false
+
+      libraries:
+        - glob:
+            include: ../../src/dataprep/**
+
+      # environment:
+      #   dependencies:
+      #     # We include every dependency defined by pyproject.toml by defining an editable environment
+      #     # that points to the folder where pyproject.toml is deployed.
+      #     - --editable ${workspace.file_path}
+
+      clusters:
+        - label: default
+          node_type_id: Standard_D2ads_v6
+          num_workers: 0
+          spark_conf:
+              spark.databricks.cluster.profile: singleNode
+              spark.master: local[*]
+          custom_tags:
+            ResourceClass: SingleNode

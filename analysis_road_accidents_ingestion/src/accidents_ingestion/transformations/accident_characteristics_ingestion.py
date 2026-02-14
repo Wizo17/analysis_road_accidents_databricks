@@ -1,5 +1,5 @@
 from pyspark import pipelines as dp
-from pyspark.sql.types import StructType, StructField, StringType, DoubleType, IntegerType
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 from pyspark.sql.functions import col, current_timestamp, to_date
 
 volume_path = spark.conf.get("volume_ingestion_path")

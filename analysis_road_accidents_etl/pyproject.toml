@@ -1,5 +1,5 @@
 [project]
-name = "analysis_road_accidents_ingestion"
+name = "analysis_road_accidents_etl"
 version = "0.0.1"
 authors = [{ name = "wzounonpro@gmail.com" }]
 requires-python = ">=3.10,<3.13"
@@ -21,11 +21,14 @@ dev = [
 ]
 
 [project.scripts]
-main = "analysis_road_accidents_ingestion.main:main"
+main = "analysis_road_accidents_etl.main:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
 
 [tool.ruff]
 line-length = 120

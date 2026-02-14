@@ -1,0 +1,52 @@
+# Job for main_job ingestion.
+
+resources:
+  jobs:
+    main_job:
+      name: main_job
+
+      trigger:
+        pause_status: UNPAUSED
+        table_update:
+          table_names:
+            - ${var.catalog}.${var.schema_raw}.accident_characteristics_raw
+            - ${var.catalog}.${var.schema_raw}.accident_sites_raw
+            - ${var.catalog}.${var.schema_raw}.accident_vehicles_raw
+            - ${var.catalog}.${var.schema_raw}.accident_victims_raw
+            - ${var.catalog}.${var.schema_raw}.baac_vehicle_registration_raw
+            - ${var.catalog}.${var.schema_raw}.geographic_reference_system_raw
+          wait_after_last_change_seconds: 0
+          condition: ALL_UPDATED
+      queue:
+        enabled: true
+
+      #email_notifications:
+      #  on_failure:
+      #    - your_email@example.com
+
+      parameters:
+        - name: catalog
+          default: ${var.catalog}
+        - name: schema_raw
+          default: ${var.schema_raw}
+        - name: schema_dataprep
+          default: ${var.schema_dataprep}
+
+      tasks:
+        - task_key: dataprep_task
+          description: Task to run the dataprep pipeline.
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.dataprep_pipeline.id}
+
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 16.4.x-scala2.12
+            node_type_id: Standard_D2ads_v6
+            data_security_mode: SINGLE_USER
+            num_workers: 0
+            spark_conf:
+              spark.databricks.cluster.profile: singleNode
+              spark.master: local[*]
+            custom_tags:
+              ResourceClass: SingleNode
