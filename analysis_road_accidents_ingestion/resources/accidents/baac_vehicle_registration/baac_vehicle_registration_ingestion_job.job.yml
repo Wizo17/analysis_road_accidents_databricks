@@ -1,0 +1,43 @@
+# Job for baac_vehicle_registration ingestion.
+
+resources:
+  jobs:
+    baac_vehicle_registration_ingestion:
+      name: baac_vehicle_registration_ingestion
+
+      trigger:
+        pause_status: UNPAUSED
+        file_arrival:
+          url: ${var.volume_baac_vehicle_registration}
+
+      queue:
+        enabled: true
+
+      #email_notifications:
+      #  on_failure:
+      #    - your_email@example.com
+
+      parameters:
+        - name: catalog
+          default: ${var.catalog}
+        - name: schema
+          default: ${var.schema}
+
+      tasks:
+        - task_key: baac_vehicle_registration_ingestion_task
+          description: Task to run the baac_vehicle_registration ingestion pipeline.
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.baac_vehicle_registration_ingestion_pipeline.id}
+
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 16.4.x-scala2.12
+            node_type_id: Standard_D2ads_v6
+            data_security_mode: SINGLE_USER
+            num_workers: 0
+            spark_conf:
+              spark.databricks.cluster.profile: singleNode
+              spark.master: local[*]
+            custom_tags:
+              ResourceClass: SingleNode

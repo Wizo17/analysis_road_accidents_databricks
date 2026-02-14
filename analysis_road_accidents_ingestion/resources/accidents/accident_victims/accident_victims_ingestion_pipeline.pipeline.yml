@@ -1,0 +1,33 @@
+# The main pipeline for accident_victims ingestion.
+
+resources:
+  pipelines:
+    accident_victims_ingestion_pipeline:
+      name: accident_victims_ingestion_pipeline
+      catalog: ${var.catalog}
+      schema: ${var.schema}
+      configuration:
+        volume_ingestion_path: ${var.volume_accident_victims}
+      root_path: "../../../src/accidents_ingestion"
+
+      continuous: false
+
+      libraries:
+        - glob:
+            include: ../../../src/accidents_ingestion/transformations/accident_victims_ingestion.py
+
+      # environment:
+      #   dependencies:
+      #     # We include every dependency defined by pyproject.toml by defining an editable environment
+      #     # that points to the folder where pyproject.toml is deployed.
+      #     - --editable ${workspace.file_path}
+
+      clusters:
+        - label: default
+          node_type_id: Standard_D2ads_v6
+          num_workers: 0
+          spark_conf:
+              spark.databricks.cluster.profile: singleNode
+              spark.master: local[*]
+          custom_tags:
+            ResourceClass: SingleNode

@@ -1,0 +1,43 @@
+# Job for accident_sites ingestion.
+
+resources:
+  jobs:
+    accident_sites_ingestion:
+      name: accident_sites_ingestion
+
+      trigger:
+        pause_status: UNPAUSED
+        file_arrival:
+          url: ${var.volume_accident_sites}
+
+      queue:
+        enabled: true
+
+      #email_notifications:
+      #  on_failure:
+      #    - your_email@example.com
+
+      parameters:
+        - name: catalog
+          default: ${var.catalog}
+        - name: schema
+          default: ${var.schema}
+
+      tasks:
+        - task_key: accident_sites_ingestion_task
+          description: Task to run the accident_sites ingestion pipeline.
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.accident_sites_ingestion_pipeline.id}
+
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 16.4.x-scala2.12
+            node_type_id: Standard_D2ads_v6
+            data_security_mode: SINGLE_USER
+            num_workers: 0
+            spark_conf:
+              spark.databricks.cluster.profile: singleNode
+              spark.master: local[*]
+            custom_tags:
+              ResourceClass: SingleNode
