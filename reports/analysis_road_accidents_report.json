@@ -1,0 +1,428 @@
+{
+  "datasets": [
+    {
+      "name": "51e9d062",
+      "displayName": "road_accidents",
+      "queryLines": [
+        "SELECT \n",
+        "    *\n",
+        "    ,concat_ws('-', accident_month, accident_year) AS accident_month_year\n",
+        "    ,concat_ws('-', accident_day, accident_month, accident_year) AS accident_date\n",
+        "FROM training.roaa_dev_analytics.road_accidents"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "aaeee09b",
+      "displayName": "Page 1",
+      "layout": [
+        {
+          "widget": {
+            "name": "883e8456",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## <span style=\"text-align:center;display:block\"><span style=\"font-size:24px\">Analyse des accidents de la route en France</span> par année</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 10,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "nombre-daccidents-par-annee-et-mois",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "51e9d062",
+                  "fields": [
+                    {
+                      "name": "accident_month",
+                      "expression": "`accident_month`"
+                    },
+                    {
+                      "name": "accident_month_year",
+                      "expression": "`accident_month_year`"
+                    },
+                    {
+                      "name": "countdistinct(accident_num)",
+                      "expression": "COUNT(DISTINCT `accident_num`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Nombre d'accidents par mois"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "accident_month_year",
+                  "displayName": "Mois",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "countdistinct(accident_num)",
+                  "displayName": "Nombre d'accidents",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "accident_month",
+                  "displayName": "Mois",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 12,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "repartition-par-region",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "51e9d062",
+                  "fields": [
+                    {
+                      "name": "accident_year",
+                      "expression": "`accident_year`"
+                    },
+                    {
+                      "name": "ref_region_name",
+                      "expression": "`ref_region_name`"
+                    },
+                    {
+                      "name": "countdistinct(accident_num)",
+                      "expression": "COUNT(DISTINCT `accident_num`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 1,
+              "frame": {
+                "showTitle": true,
+                "title": "Répartition par région et par année"
+              },
+              "widgetType": "sankey",
+              "encodings": {
+                "value": {
+                  "fieldName": "countdistinct(accident_num)"
+                },
+                "stages": [
+                  {
+                    "fieldName": "accident_year"
+                  },
+                  {
+                    "fieldName": "ref_region_name"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 6,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "nombre-daccidents-par-type-de-voies",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "51e9d062",
+                  "fields": [
+                    {
+                      "name": "countdistinct(accident_num)",
+                      "expression": "COUNT(DISTINCT `accident_num`)"
+                    },
+                    {
+                      "name": "road_category",
+                      "expression": "`road_category`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Nombre d'accidents par type de voie"
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "countdistinct(accident_num)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Répartition par Type de voie"
+                },
+                "color": {
+                  "fieldName": "road_category",
+                  "displayName": "Type de voie",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "957e0148",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "51e9d062",
+                  "fields": [
+                    {
+                      "name": "countdistinct(accident_num)",
+                      "expression": "COUNT(DISTINCT `accident_num`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "countdistinct(accident_num)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 10,
+            "y": 0,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "2121f88d",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "51e9d062",
+                  "fields": [
+                    {
+                      "name": "countdistinct(accident_num)",
+                      "expression": "COUNT(DISTINCT `accident_num`)"
+                    },
+                    {
+                      "name": "injury_severity",
+                      "expression": "`injury_severity`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`injury_severity` IN ('Blessé hospitalisé', 'Blessé léger', 'Indemne', 'Tué')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "countdistinct(accident_num)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "injury_severity",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 12,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "a5bb8298",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "51e9d062",
+                  "fields": [
+                    {
+                      "name": "vehicle_engine_type",
+                      "expression": "`vehicle_engine_type`"
+                    },
+                    {
+                      "name": "countdistinct(accident_num)",
+                      "expression": "COUNT(DISTINCT `accident_num`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`vehicle_engine_type` IN ('Electrique', 'Humaine', 'Hybride électrique', 'Hydrocarbures', 'Hydrogène')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 1,
+              "widgetType": "combo",
+              "encodings": {
+                "x": {
+                  "fieldName": "vehicle_engine_type",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "primary": {
+                    "fields": [
+                      {
+                        "fieldName": "countdistinct(accident_num)"
+                      }
+                    ]
+                  },
+                  "secondary": {
+                    "fields": []
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 12,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "3f6a7e52",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "annee-en-cours",
+            "queries": [
+              {
+                "name": "dashboards/01f10a6d4d5317c09f788bc03003ea80/datasets/01f10a859acb17788d33ea347968c544_accident_year",
+                "query": {
+                  "datasetName": "51e9d062",
+                  "fields": [
+                    {
+                      "name": "accident_year",
+                      "expression": "`accident_year`"
+                    },
+                    {
+                      "name": "accident_year_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Année en cours"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "accident_year",
+                    "queryName": "dashboards/01f10a6d4d5317c09f788bc03003ea80/datasets/01f10a859acb17788d33ea347968c544_accident_year"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
