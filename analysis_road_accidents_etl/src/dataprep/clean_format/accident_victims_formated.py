@@ -1,3 +1,7 @@
+"""
+This module formats accident victims data.
+"""
+
 from pyspark import pipelines as dp
 from pyspark.sql import functions as F
 
@@ -9,6 +13,7 @@ schema_raw = spark.conf.get("param_schema_raw")
 )
 @dp.expect_or_drop("valid_accident_num", "accident_num IS NOT NULL")
 def accident_victims_formated():
+    """Format accident victims from raw data."""
     return (
         spark.read
         .table(f"{catalog}.{schema_raw}.accident_victims_raw")

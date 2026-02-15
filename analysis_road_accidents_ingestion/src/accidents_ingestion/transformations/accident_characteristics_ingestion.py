@@ -1,9 +1,15 @@
+"""
+Accident characteristics ingestion module.
+Handles loading and processing of accident characteristics data.
+"""
+
 from pyspark import pipelines as dp
 from pyspark.sql.types import StructType, StructField, StringType
 from pyspark.sql.functions import col, current_timestamp, to_date
 
 volume_path = spark.conf.get("volume_ingestion_path")
 
+# Define schema for accident characteristics data
 schema = StructType([
     StructField("accident_num", StringType(), True),
     StructField("accident_day", StringType(), True),
@@ -28,6 +34,12 @@ schema = StructType([
     partition_cols=["ingestion_date"]
 )
 def accident_characteristics_raw():
+    """
+    Load raw accident characteristics data from CSV files.
+    
+    Returns:
+        DataFrame: Raw data with additional metadata columns.
+    """
     return (
         spark.readStream
         .format("cloudFiles")

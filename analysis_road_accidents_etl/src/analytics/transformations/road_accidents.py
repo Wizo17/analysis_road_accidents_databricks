@@ -1,3 +1,7 @@
+"""
+This module handles the road accidents data transformation.
+"""
+
 from pyspark import pipelines as dp
 from pyspark.sql import functions as F
 from utilities.tools import delete_technical_columns
@@ -10,16 +14,21 @@ schema_dataprep = spark.conf.get("param_schema_dataprep")
 )
 @dp.expect_or_drop("valid_accident_num", "accident_num IS NOT NULL")
 def road_accidents():
+    # Read and clean formatted tables
     df_acc_char = delete_technical_columns((spark.read.table(f"{catalog}.{schema_dataprep}.accident_characteristics_formated")))
     df_acc_st = delete_technical_columns((spark.read.table(f"{catalog}.{schema_dataprep}.accident_sites_formated")))
     df_acc_ve = delete_technical_columns((spark.read.table(f"{catalog}.{schema_dataprep}.accident_vehicles_formated")))
     df_acc_vic = delete_technical_columns((spark.read.table(f"{catalog}.{schema_dataprep}.accident_victims_formated")))
 
+    # Join accident tables
     df_accidents = join_accidents_table(df_acc_char, df_acc_st, df_acc_ve, df_acc_vic)
 
+    # Read geo reference
     df_geo_ref = (spark.read.table(f"{catalog}.{schema_dataprep}.geographic_reference_system_formated"))
+    # Join with geo reference
     df_main = join_accidents_with_geo_ref(df_accidents, df_geo_ref)
     
+    # Convert coordinates to double
     return (
         df_main
             .withColumn("accident_latitude", F.regexp_replace(F.col("accident_latitude"), ",", ".").cast("double"))
@@ -28,6 +37,7 @@ def road_accidents():
 
 
 def join_accidents_table(df_acc_char, df_acc_st, df_acc_ve, df_acc_vic):
+    """Join accident tables with renamed columns."""
     df_acc_char_formated = (
         df_acc_char
             .withColumnRenamed("accident_num", "accident_num_char")
@@ -81,6 +91,7 @@ def join_accidents_table(df_acc_char, df_acc_st, df_acc_ve, df_acc_vic):
 
 
 def join_accidents_with_geo_ref(df_accidents, df_geo_ref):
+    """Join accidents with geographic reference."""
     return (
         df_accidents
             .join(

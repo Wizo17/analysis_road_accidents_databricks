@@ -1,3 +1,7 @@
+"""
+This module defines the accident risks transformation.
+"""
+
 import math
 from pyspark import pipelines as dp
 from pyspark.sql import functions as F
@@ -11,6 +15,7 @@ schema_analytics = spark.conf.get("param_schema_analytics")
     name="accident_risks"
 )
 def accident_risks():
+    # Define grouping columns for aggregation
     group_by_cols = [
         "zone_id",
         "grid_lat",
@@ -22,14 +27,18 @@ def accident_risks():
         "accident_year"
     ]
 
+    # Read road accidents table
     df_accidents = (spark.read.table(f"{catalog}.{schema_analytics}.road_accidents"))
+    # Add zone information
     df_accidents = add_zones_info(df_accidents)
 
+    # Summarize characteristics, sites, vehicles, victims
     df_cha = summarize_characteristics(df_accidents, group_by_cols)
     df_sit = summarize_sites(df_accidents, group_by_cols)
     df_veh = summarize_vehicles(df_accidents, group_by_cols)
     df_vic = summarize_victims(df_accidents, group_by_cols)
 
+    # Join the summaries
     df_accident_risks = (
         df_cha
         .join(df_sit, group_by_cols, "left")

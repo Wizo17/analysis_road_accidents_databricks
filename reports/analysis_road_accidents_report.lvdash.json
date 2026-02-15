@@ -10,6 +10,27 @@
         "    ,concat_ws('-', accident_day, accident_month, accident_year) AS accident_date\n",
         "FROM training.roaa_dev_analytics.road_accidents"
       ]
+    },
+    {
+      "name": "a6a90040",
+      "displayName": "accident_by_hour_per_year",
+      "queryLines": [
+        "SELECT\n",
+        "  `accident_year`,\n",
+        "  CAST(SPLIT(`accident_time`, ':')[0] AS INT) AS accident_hour,\n",
+        "  COUNT(DISTINCT `accident_num`) AS accident_count\n",
+        "FROM\n",
+        "  `training`.`roaa_dev_analytics`.`road_accidents`\n",
+        "WHERE\n",
+        "  `accident_time` IS NOT NULL\n",
+        "  AND `accident_year` IS NOT NULL\n",
+        "GROUP BY\n",
+        "  `accident_year`,\n",
+        "  CAST(SPLIT(`accident_time`, ':')[0] AS INT)\n",
+        "ORDER BY\n",
+        "  `accident_year` ASC,\n",
+        "  accident_hour ASC"
+      ]
     }
   ],
   "pages": [
@@ -63,7 +84,7 @@
               "version": 3,
               "frame": {
                 "showTitle": true,
-                "title": "Nombre d'accidents par mois"
+                "title": "Nombre d'accidents par mois et années"
               },
               "widgetType": "bar",
               "encodings": {
@@ -191,7 +212,7 @@
                   "scale": {
                     "type": "quantitative"
                   },
-                  "displayName": "Répartition par Type de voie"
+                  "displayName": "Répartition"
                 },
                 "color": {
                   "fieldName": "road_category",
@@ -280,10 +301,12 @@
                   "fieldName": "countdistinct(accident_num)",
                   "scale": {
                     "type": "quantitative"
-                  }
+                  },
+                  "displayName": "Répartition"
                 },
                 "color": {
                   "fieldName": "injury_severity",
+                  "displayName": "Sévérité",
                   "scale": {
                     "type": "categorical"
                   }
@@ -305,50 +328,56 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "51e9d062",
+                  "datasetName": "a6a90040",
                   "fields": [
                     {
-                      "name": "vehicle_engine_type",
-                      "expression": "`vehicle_engine_type`"
+                      "name": "accident_year",
+                      "expression": "`accident_year`"
                     },
                     {
-                      "name": "countdistinct(accident_num)",
-                      "expression": "COUNT(DISTINCT `accident_num`)"
-                    }
-                  ],
-                  "filters": [
+                      "name": "accident_hour",
+                      "expression": "`accident_hour`"
+                    },
                     {
-                      "expression": "`vehicle_engine_type` IN ('Electrique', 'Humaine', 'Hybride électrique', 'Hydrocarbures', 'Hydrogène')"
+                      "name": "accident_count",
+                      "expression": "`accident_count`"
                     }
                   ],
-                  "disaggregated": false
+                  "disaggregated": true
                 }
               }
             ],
             "spec": {
-              "version": 1,
-              "widgetType": "combo",
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Répartition des accidents par heure de la journée et par année"
+              },
+              "widgetType": "line",
               "encodings": {
                 "x": {
-                  "fieldName": "vehicle_engine_type",
+                  "fieldName": "accident_hour",
+                  "displayName": "Heures",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "accident_count",
+                  "displayName": "Nombre d'accident",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "accident_year",
+                  "displayName": "Années",
                   "scale": {
                     "type": "categorical"
                   }
                 },
-                "y": {
-                  "primary": {
-                    "fields": [
-                      {
-                        "fieldName": "countdistinct(accident_num)"
-                      }
-                    ]
-                  },
-                  "secondary": {
-                    "fields": []
-                  },
-                  "scale": {
-                    "type": "quantitative"
-                  }
+                "label": {
+                  "show": false
                 }
               }
             }
@@ -373,9 +402,26 @@
             "name": "annee-en-cours",
             "queries": [
               {
-                "name": "dashboards/01f10a6d4d5317c09f788bc03003ea80/datasets/01f10a859acb17788d33ea347968c544_accident_year",
+                "name": "dashboards/01f10a6d4d5317c09f788bc03003ea80/datasets/01f10a9645931c358334e0b076bde387_accident_year",
                 "query": {
                   "datasetName": "51e9d062",
+                  "fields": [
+                    {
+                      "name": "accident_year",
+                      "expression": "`accident_year`"
+                    },
+                    {
+                      "name": "accident_year_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "dashboards/01f10a6d4d5317c09f788bc03003ea80/datasets/01f10abf15491f0ea2f33de1217cb3c6_accident_year",
+                "query": {
+                  "datasetName": "a6a90040",
                   "fields": [
                     {
                       "name": "accident_year",
@@ -401,7 +447,11 @@
                 "fields": [
                   {
                     "fieldName": "accident_year",
-                    "queryName": "dashboards/01f10a6d4d5317c09f788bc03003ea80/datasets/01f10a859acb17788d33ea347968c544_accident_year"
+                    "queryName": "dashboards/01f10a6d4d5317c09f788bc03003ea80/datasets/01f10a9645931c358334e0b076bde387_accident_year"
+                  },
+                  {
+                    "fieldName": "accident_year",
+                    "queryName": "dashboards/01f10a6d4d5317c09f788bc03003ea80/datasets/01f10abf15491f0ea2f33de1217cb3c6_accident_year"
                   }
                 ]
               }

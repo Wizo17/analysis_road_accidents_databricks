@@ -1,3 +1,7 @@
+"""
+This module formats geographic reference system data.
+"""
+
 from pyspark import pipelines as dp
 from pyspark.sql import functions as F
 
@@ -9,6 +13,7 @@ schema_raw = spark.conf.get("param_schema_raw")
 )
 @dp.expect_or_drop("valid_ref_municipality_insee_code", "ref_municipality_insee_code IS NOT NULL")
 def geographic_reference_system_formated():
+    """Format geographic reference system from raw data."""
     return (
         spark.read
         .table(f"{catalog}.{schema_raw}.geographic_reference_system_raw")

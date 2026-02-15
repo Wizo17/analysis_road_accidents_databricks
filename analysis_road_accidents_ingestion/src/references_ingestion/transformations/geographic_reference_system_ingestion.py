@@ -1,9 +1,15 @@
+"""
+Geographic reference system ingestion module.
+Handles loading and processing of geographic reference data.
+"""
+
 from pyspark import pipelines as dp
 from pyspark.sql.types import StructType, StructField, StringType
 from pyspark.sql.functions import col, current_timestamp, to_date
 
 volume_path = spark.conf.get("volume_ingestion_path")
 
+# Define schema for geographic reference system data
 schema = StructType([
     StructField("REGRGP_NOM", StringType(), True),
     StructField("REG_NOM", StringType(), True),
@@ -72,6 +78,12 @@ schema = StructType([
     partition_cols=["ingestion_date"]
 )
 def geographic_reference_system_raw():
+    """
+    Load raw geographic reference system data from CSV files.
+    
+    Returns:
+        DataFrame: Raw data with additional metadata columns.
+    """
     return (
         spark.read
         .format("csv")

@@ -1,2 +1,15 @@
+.databricks/
+build/
+dist/
+__pycache__/
+*.egg-info
+.venv/
+scratch/**
+!scratch/README.md
+**/explorations/**
+**/!explorations/README.md
 .DS_Store
-.DS_Store/
+.vscode/
+.idea/
+*.log
+*.tmp

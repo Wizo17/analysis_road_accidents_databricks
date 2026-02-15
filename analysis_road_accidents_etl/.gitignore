@@ -8,3 +8,8 @@ scratch/**
 !scratch/README.md
 **/explorations/**
 **/!explorations/README.md
+.DS_Store
+.vscode/
+.idea/
+*.log
+*.tmp

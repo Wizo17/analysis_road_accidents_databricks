@@ -1,3 +1,5 @@
+# This module defines schemas for analytics data.
+
 # from pyspark.sql.types import (
 #     StructType, StructField,
 #     StringType, IntegerType, DoubleType, DateType

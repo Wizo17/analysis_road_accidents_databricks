@@ -1,9 +1,15 @@
+"""
+BAAC vehicle registration ingestion module.
+Handles loading and processing of BAAC vehicle registration data.
+"""
+
 from pyspark import pipelines as dp
 from pyspark.sql.types import StructType, StructField, StringType
 from pyspark.sql.functions import col, current_timestamp, to_date
 
 volume_path = spark.conf.get("volume_ingestion_path")
 
+# Define schema for BAAC vehicle registration data
 schema = StructType([
     StructField("accident_id", StringType(), True),
     StructField("vehicle_convention_letter", StringType(), True),
@@ -21,6 +27,12 @@ schema = StructType([
     partition_cols=["ingestion_date"]
 )
 def baac_vehicle_registration_raw():
+    """
+    Load raw BAAC vehicle registration data from CSV files.
+    
+    Returns:
+        DataFrame: Raw data with additional metadata columns.
+    """
     return (
         spark.readStream
         .format("cloudFiles")

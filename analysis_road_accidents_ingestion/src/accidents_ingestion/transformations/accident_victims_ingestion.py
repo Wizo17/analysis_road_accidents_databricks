@@ -1,9 +1,15 @@
+"""
+Accident victims ingestion module.
+Handles loading and processing of accident victims data.
+"""
+
 from pyspark import pipelines as dp
 from pyspark.sql.types import StructType, StructField, StringType
 from pyspark.sql.functions import col, current_timestamp, to_date
 
 volume_path = spark.conf.get("volume_ingestion_path")
 
+# Define schema for accident victims data
 schema = StructType([
     StructField("accident_num", StringType(), True),
     StructField("user_id", StringType(), True),
@@ -29,6 +35,12 @@ schema = StructType([
     partition_cols=["ingestion_date"]
 )
 def accident_victims_raw():
+    """
+    Load raw accident victims data from CSV files.
+    
+    Returns:
+        DataFrame: Raw data with additional metadata columns.
+    """
     return (
         spark.readStream
         .format("cloudFiles")

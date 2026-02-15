@@ -1,7 +1,12 @@
+"""
+Utility functions for accident data processing.
+"""
+
 import math
 from pyspark.sql import functions as F
 
 def add_zones_info(df):
+    """Add grid and zone information to the dataframe."""
     # 1 degree latitude = ~111,111 m
     # 1 degree longitude = 111,111 * cos(latitude)
     # For France (average 47°N), cos(47°) ≈ 0.682
@@ -20,6 +25,7 @@ def add_zones_info(df):
 
 
 def summarize_characteristics(df, group_by_cols):
+    """Summarize accident characteristics."""
     df_selected = (
         df
         .select(group_by_cols + ["accident_num", "light_conditions", "accident_location", "accident_atmospheric_conditions", "accident_collision_type"])
@@ -55,6 +61,7 @@ def summarize_characteristics(df, group_by_cols):
 
 
 def summarize_sites(df, group_by_cols):
+    """Summarize accident sites."""
     df_selected = (
         df
         .select(group_by_cols + ["accident_num", "road_category", "reserved_lane", "surface_condition", "layout_infrastructure"])
@@ -99,6 +106,7 @@ def summarize_sites(df, group_by_cols):
 
 
 def summarize_vehicles(df, group_by_cols):
+    """Summarize vehicles involved in accidents."""
     df_selected = (
         df
         .select(group_by_cols + ["accident_num", "vehicle_id", "vehicle_category", "moving_obstacle_struck", "vehicle_engine_type"])
@@ -135,6 +143,7 @@ def summarize_vehicles(df, group_by_cols):
 
 
 def summarize_victims(df, group_by_cols):
+    """Summarize victims of accidents."""
     df_selected = (
         df
         .select(group_by_cols + ["accident_num", "vehicle_id", "user_id", "user_category", "user_gender", "user_birth_year", "injury_severity"])
